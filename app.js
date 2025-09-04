@@ -1,5 +1,4 @@
 const express = require("express");
-const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 
@@ -13,19 +12,30 @@ connectDB();
 app.use(express.json());
 
 // ✅ Configure CORS properly
-app.use(cors({
-    origin: "https://to-do-app-by-vivek.netlify.app", // Your frontend URL
+const cors = require("cors");
+
+app.use(
+  cors({
+    origin: [
+      "https://to-do-app-by-vivek.netlify.app", // Netlify frontend
+      "http://localhost",
+      "https://localhost",
+      "capacitor://localhost", // Capacitor app
+    ],
     methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true
-}));
+    credentials: true,
+  })
+);
 
 // ✅ Handle Preflight Requests
 app.options("*", (req, res) => {
-    res.header("Access-Control-Allow-Origin", "https://to-do-app-by-vivek.netlify.app");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-    res.sendStatus(200);
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://to-do-app-by-vivek.netlify.app"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.sendStatus(200);
 });
 
 // ✅ Routes
